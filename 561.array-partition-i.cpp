@@ -37,7 +37,20 @@
 class Solution {
 public:
     int arrayPairSum(vector<int>& nums) {
-        
+        sort(nums.begin(), nums.end());
+        /*for(int i = 0; i < nums.size() - 1; i++){
+            if(nums[i] > nums[i+1]){
+                int t = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = t;
+                i = i == 0 ? -1 : i-2;
+            }
+        }*/
+        int sum = 0;
+        for(int i = 0 ; i < nums.size(); i+= 2){
+            sum += nums[i];
+        }
+        return sum;
     }
 };
 
