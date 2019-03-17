@@ -5,7 +5,12 @@
 		}
 	],
 	"settings": {
-		"C_Cpp.default.forcedInclude": ["LeetCodePreInclude.h"]
+		"C_Cpp.default.forcedInclude": [
+			"LeetCodePreInclude.h"
+		],
+		"files.associations": {
+			"vector": "cpp"
+		}
 		
 	}
 }
