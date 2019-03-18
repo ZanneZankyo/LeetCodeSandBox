@@ -31,21 +31,16 @@
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        vector<int> sums;
-        sums.resize(nums.size() + 1);
-        sums[0] = 0;
-        for(int i = 0, sum = 0; i < nums.size(); ++i){
+        int sum = 0;
+        int min = 0;
+        int max = nums[0];
+        for(int i = 0; i < nums.size(); ++i){
             sum += nums[i];
-            sums[i + 1] = sum;
-            //cout << sum << ",";
-        }
-        int max = 0x80000000;
-        for(int i = 0; i < sums.size(); ++i){
-            for(int j = i + 1; j < sums.size(); ++j){
-                int diff = sums[j] - sums[i];
-                if(diff > max){
-                    max = diff;
-                }
+            if(sum - min > max){
+                max = sum - min;
+            }
+            if(sum < min){
+                min = sum;
             }
         }
         return max;
