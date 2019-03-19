@@ -66,12 +66,13 @@ public:
         if(numbers.size() == 0)
             return result;
         result = vector<int>();
+        result.reserve(2);
         for(int i = 0; i < numbers.size() - 1; ++i){
             int j = findIndex(numbers,i,target - numbers[i]);
             if(j != -1){
                 result.push_back(i + 1);
                 result.push_back(j + 1);
-                continue;
+                break;
             }
         }
         return result;
