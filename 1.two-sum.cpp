@@ -66,7 +66,7 @@ public:
     }
 #define TIME 0
 #define SPACE 1
-#define METHOD SPACE
+#define METHOD TIME
 
 #if METHOD == TIME
     vector<int> twoSum(vector<int>& nums, int target) {
@@ -87,7 +87,7 @@ public:
             if(j != -1){
                 result.push_back(sets[i].index);
                 result.push_back(sets[j].index);
-                continue;
+                break;
             }
         }
         return result;
