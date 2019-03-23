@@ -32,36 +32,37 @@ public:
         primes[0] = false;
         primes[1] = false;
     }
-    int nextPrime(vector<bool>& primes, int currentPrime){
+    int nextPrime(int currentPrime, int n){
         ++currentPrime;
-        while(!primes[currentPrime] && currentPrime < primes.size()) currentPrime++;
+        while(!primes[currentPrime] && currentPrime < n) currentPrime+=2;
         return currentPrime;
     }
     int countPrimes(int n) {
-        if(n > primes.size()){
-            primes.resize(n, true);
-            int currentPrime = largestPrime;
-            while(currentPrime <= n/2){
-                int i = 2;
-                int multiplyOfPrime = i * currentPrime;
 
-                while(multiplyOfPrime < n){
-                    //cout << multiplyOfPrime << "|";
-                    primes[multiplyOfPrime] = false;
-                    ++i;
-                    multiplyOfPrime = i * currentPrime;
+        if(n <= 2){
+            return 0;
+        }
+
+        primes.resize(n, true);
+        int limit = sqrt(n);
+        //cout<<"limit:"<<limit<<"!";
+        int total = 1;
+        for(int currentNum = 3; currentNum < n; currentNum+=2){
+            if(primes[currentNum]){
+                
+                ++total;
+                if(currentNum > largestPrime && currentNum <= limit){
+                    //cout << currentNum << "|";
+                    largestPrime = currentNum;
+                    for(int currentPrime = largestPrime * largestPrime; 
+                        currentPrime < n; 
+                        currentPrime += largestPrime){
+                        primes[currentPrime] = false;
+                    }
                 }
-                currentPrime = nextPrime(primes, currentPrime);
-                largestPrime = currentPrime >= primes.size() ? largestPrime : currentPrime;
             }
         }
         
-        int total = 0;
-        for(int i = 0; i < n; ++i){
-            if(primes[i]){
-                ++total;
-            }
-        }
         return total;
     }
 };
