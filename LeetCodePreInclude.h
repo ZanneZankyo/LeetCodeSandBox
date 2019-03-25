@@ -15,6 +15,12 @@ struct Interval {
     Interval(int s, int e) : start(s), end(e) {}
 };
 
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
 struct TreeNode {
     int val;
     TreeNode *left;
