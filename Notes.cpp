@@ -1,4 +1,6 @@
-class Utils{
+class Notes{
+    #define INT_MAX 0x7FFFFFFF
+    #define INT_MIN 0x80000000
     int binarySearch(vector<int>& nums ,int startIndex, int endIndex, int target){
         int near = startIndex;
         int far = endIndex;
