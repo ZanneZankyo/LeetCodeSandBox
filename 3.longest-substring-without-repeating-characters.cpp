@@ -46,6 +46,53 @@
  * 
  * 
  */
+
+#define TIME 1
+#define SPACE 2
+#define METHOD TIME
+
+#if METHOD == TIME
+
+class Solution {
+public:
+
+    bool appearedCharacters[128];
+
+    int lengthOfLongestSubstring(string s) {
+
+        if(s.empty()) return 0;
+        
+        memset(appearedCharacters, 0, sizeof(bool)*128);
+        
+        int max = 0;
+        int fromIndex = 0;
+        int toIndex = 0;
+        while(fromIndex < s.size())
+        {
+            for(toIndex = fromIndex; toIndex < s.size(); toIndex++ )
+            {
+                int tableIndex = s[toIndex];
+                if(appearedCharacters[tableIndex])
+                    break;
+                else
+                    appearedCharacters[tableIndex] = true;
+            }
+            int length = toIndex - fromIndex;
+            max = (length > max) ? length : max;
+            
+            memset(appearedCharacters, 0, sizeof(bool)*128);
+            
+            while(fromIndex < s.size() && s[fromIndex] != s[toIndex]) ++fromIndex;
+            ++fromIndex;
+        }
+        return max;
+
+    }
+};
+#endif
+
+#if METHOD == SPACE
+
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
@@ -81,4 +128,6 @@ public:
         return max;
     }
 };
+
+#endif
 
