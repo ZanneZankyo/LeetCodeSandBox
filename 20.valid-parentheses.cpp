@@ -59,6 +59,18 @@
  * 
  * 
  */
+
+/*
+
+
+*/
+
+#define RECURSION 1
+#define STACK 2
+#define METHOD STACK
+
+#if METHOD == RECURSION
+
 class Solution {
 public:
     bool recursion(string& s, int i){
@@ -85,4 +97,36 @@ public:
         return true;
     }
 };
+
+#endif
+
+#if METHOD == STACK
+
+class Solution {
+public:
+    
+    bool isValid(string str) {
+        stack<char> stk;
+        for(char c : str){
+            if(c == '(' || c == '[' || c == '{'){
+                stk.push(c);
+            }
+            else if(c == ')' || c == ']' || c == '}'){
+                if(stk.empty()){
+                    return false;
+                }
+                char top = stk.top();
+                if( (top == '(' && c == ')') || (top == '[' && c == ']') || (top == '{' && c == '}') ){
+                    stk.pop();
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        return stk.empty();
+    }
+};
+
+#endif
 
