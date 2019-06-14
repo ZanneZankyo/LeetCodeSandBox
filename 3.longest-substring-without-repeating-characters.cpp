@@ -47,6 +47,19 @@
  * 
  */
 
+/*
+
+Test case:
+
+"abcabcbb"
+""
+"pwwkew"
+"bbbbb"
+"abcbaeb"
+"abcdefg"
+
+*/
+
 #define TIME 1
 #define SPACE 2
 #define METHOD TIME
@@ -92,42 +105,6 @@ public:
 #endif
 
 #if METHOD == SPACE
-
-class Solution {
-public:
-    int lengthOfLongestSubstring(string s) {
-        
-        vector<bool> appearedCharacters;
-        appearedCharacters.resize(128,false);
-        
-        int max = 0;
-        int fromIndex = 0;
-        int toIndex = 0;
-        while(fromIndex < s.size())
-        {
-            for(toIndex = fromIndex; toIndex < s.size(); toIndex++ )
-            {
-                int tableIndex = s[toIndex];
-                if(appearedCharacters[tableIndex])
-                    break;
-                else
-                    appearedCharacters[tableIndex] = true;
-            }
-            int length = toIndex - fromIndex;
-            max = (length > max) ? length : max;
-            
-            for(int i = fromIndex; i <= toIndex; i++)
-            {
-                int tableIndex = s[i];
-                appearedCharacters[tableIndex] = false;
-            }
-                
-            
-            fromIndex++;
-        }
-        return max;
-    }
-};
 
 #endif
 
