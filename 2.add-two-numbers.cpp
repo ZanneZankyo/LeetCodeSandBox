@@ -35,6 +35,67 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+
+/*
+
+test case: 2 lines a set
+
+[2,4,3]
+[5,6,4]
+[]
+[]
+[2,4,3]
+[1]
+[2,4,3]
+[]
+[9]
+[1]
+
+*/
+
+#define TIME 1
+#define SPACE 2
+#define METHOD TIME
+
+#if METHOD == TIME
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* result = nullptr;
+        ListNode* current = result;
+        int carry = 0;
+        while(l1 || l2){
+            int v1 = l1 ? l1->val : 0;
+            int v2 = l2 ? l2->val : 0;
+            int newVal = v1 + v2 + carry;
+            carry = 0;
+            if(newVal >= 10){
+                carry = 1;
+                newVal -= 10;
+            }
+            if(result){
+                current->next = new ListNode(newVal);
+                current = current->next;
+            }
+            else{
+                result = new ListNode(newVal);
+                current = result;
+            }
+            l1 = l1 ? l1->next : nullptr;
+            l2 = l2 ? l2->next : nullptr;
+        }
+        if(carry){
+            current->next = new ListNode(1);
+        }
+        return result;
+    }
+};
+
+#endif 
+
+#if METHOD == SPACE
+
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
@@ -75,4 +136,6 @@ public:
 
     }
 };
+
+#endif
 
