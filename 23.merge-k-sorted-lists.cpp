@@ -36,6 +36,8 @@
  * };
  */
 
+#if 1 //99.42% dq
+
 class Solution {
 public:
 
@@ -86,66 +88,57 @@ public:
     }
 };
 
-#if 0 //14%
+#endif
+
+#if 0 //99.42% priority queue
+
+class ListNodeComp
+{
+public:
+    bool operator() (ListNode* a, ListNode* b){
+        return a->val > b->val;
+    }
+};
 
 class Solution {
 public:
 
     ListNode* mergeKLists(vector<ListNode*>& lists) {
 
-        ListNode headNoInclude(0x80000000);
-        ListNode *min = &headNoInclude;
-        //ListNode *current = min;
-        while(!lists.empty()){
-            ListNode* newMin = nullptr;
-            for(int i = 0 ; i < lists.size(); ++i){
-                if(!lists[i]){
-                    lists.erase(lists.begin() + i);
-                    --i;
-                    continue;
-                }
+        priority_queue<ListNode*, vector<ListNode*>, ListNodeComp> que;
 
-                if(!newMin){
-                    newMin = lists[i];
-                }
-                else if(lists[i]->val < newMin->val){
-                    newMin = lists[i];
-                }
-
-                ListNode *current = min;
-                bool hasInserted = false;
-                while(current->next){
-                    if(current->val <= lists[i]->val && current->next->val >= lists[i]->val){
-                        ListNode* currentNext = current->next;
-                        ListNode* newList = lists[i];
-                        lists[i] = lists[i]->next;
-                        current->next = newList;
-                        newList->next = currentNext;
-                        hasInserted = true;
-                        break;
-                    }
-                    current = current->next;
-                }
-                if(!hasInserted){
-                    ListNode* currentNext = current->next;
-                    ListNode* newList = lists[i];
-                    lists[i] = lists[i]->next;
-                    current->next = newList;
-                    newList->next = currentNext;
-                }
-
-            }
-            min = newMin;
-            //if(newMin)
-            //    cout<<newMin->val<<'|';
+        for(ListNode* node : lists){
+            if(!node) continue;
+            que.push(node);
         }
-        return headNoInclude.next;
+        ListNode* result = nullptr;
+        ListNode* current = result;
+        while(!que.empty()){
+            ListNode* top = que.top();
+            que.pop();
+            if(result == nullptr){
+                result = top;
+                current = result;
+            }
+            else{
+                current->next = top;
+                current = top;
+            }
+            ListNode* newNode = top;
+            top = top->next;
+            if(top){
+                //cout<<top->val<<"|";
+                que.push(top);
+            }
+            newNode->next = nullptr;
+        }
+        return result;
     }
 };
 
 #endif
 
-#if 0 //runtime 21% O(n * length)
+#if 0 //runtime 21% O(n * length) //should use binary search to do insertSortedList
 
 class Solution {
 public:
@@ -217,6 +210,65 @@ public:
             sortedLists = insertSortedList(others, top);
         }
         return result;
+    }
+};
+
+#endif
+
+#if 0 //14%
+
+class Solution {
+public:
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+
+        ListNode headNoInclude(0x80000000);
+        ListNode *min = &headNoInclude;
+        //ListNode *current = min;
+        while(!lists.empty()){
+            ListNode* newMin = nullptr;
+            for(int i = 0 ; i < lists.size(); ++i){
+                if(!lists[i]){
+                    lists.erase(lists.begin() + i);
+                    --i;
+                    continue;
+                }
+
+                if(!newMin){
+                    newMin = lists[i];
+                }
+                else if(lists[i]->val < newMin->val){
+                    newMin = lists[i];
+                }
+
+                ListNode *current = min;
+                bool hasInserted = false;
+                while(current->next){
+                    if(current->val <= lists[i]->val && current->next->val >= lists[i]->val){
+                        ListNode* currentNext = current->next;
+                        ListNode* newList = lists[i];
+                        lists[i] = lists[i]->next;
+                        current->next = newList;
+                        newList->next = currentNext;
+                        hasInserted = true;
+                        break;
+                    }
+                    current = current->next;
+                }
+                if(!hasInserted){
+                    ListNode* currentNext = current->next;
+                    ListNode* newList = lists[i];
+                    lists[i] = lists[i]->next;
+                    current->next = newList;
+                    newList->next = currentNext;
+                }
+
+            }
+            min = newMin;
+            //if(newMin)
+            //    cout<<newMin->val<<'|';
+        }
+        return headNoInclude.next;
     }
 };
 
