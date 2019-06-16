@@ -36,18 +36,125 @@
  * };
  */
 
+class Solution {
+public:
 
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        ListNode* newHead = nullptr;
+        ListNode* cur = nullptr;
+        ListNode* cur1 = l1;
+        ListNode* cur2 = l2;
+        while(cur1 || cur2){
+            bool use1 = (cur1 && cur2 && cur1->val < cur2->val) || (cur1 && !cur2);
+            ListNode* newNode = nullptr;
+            if(use1){
+                newNode = cur1;
+                cur1 = cur1->next;
+            }
+            else{
+                newNode = cur2;
+                cur2 = cur2->next;
+            }
+            if(!newHead){
+                newHead = newNode;
+                cur = newHead;
+            }
+            else{
+                cur->next = newNode;
+                cur = cur->next;
+            }
+        }
+        return newHead;
+    }
 
-#if 1 //21%
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
 
-struct ListListNode{
-    ListNode* node;
-    ListListNode* next;
-    ListListNode(ListNode* n) : node(n), next(nullptr){}
+        if(lists.empty())
+            return nullptr;
+
+        int pair = 2;
+        int skip = 1;
+        while(skip < lists.size()){
+            for(int i = 0; i+skip < lists.size(); i+=pair){
+                //cout<<i << " x "<<i+skip<<" | ";
+                lists[i] = mergeTwoLists(lists[i], lists[i+skip]);
+            }
+            pair *= 2;
+            skip *= 2;
+        }
+        return lists[0];
+    }
 };
+
+#if 0 //14%
 
 class Solution {
 public:
+
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+
+        ListNode headNoInclude(0x80000000);
+        ListNode *min = &headNoInclude;
+        //ListNode *current = min;
+        while(!lists.empty()){
+            ListNode* newMin = nullptr;
+            for(int i = 0 ; i < lists.size(); ++i){
+                if(!lists[i]){
+                    lists.erase(lists.begin() + i);
+                    --i;
+                    continue;
+                }
+
+                if(!newMin){
+                    newMin = lists[i];
+                }
+                else if(lists[i]->val < newMin->val){
+                    newMin = lists[i];
+                }
+
+                ListNode *current = min;
+                bool hasInserted = false;
+                while(current->next){
+                    if(current->val <= lists[i]->val && current->next->val >= lists[i]->val){
+                        ListNode* currentNext = current->next;
+                        ListNode* newList = lists[i];
+                        lists[i] = lists[i]->next;
+                        current->next = newList;
+                        newList->next = currentNext;
+                        hasInserted = true;
+                        break;
+                    }
+                    current = current->next;
+                }
+                if(!hasInserted){
+                    ListNode* currentNext = current->next;
+                    ListNode* newList = lists[i];
+                    lists[i] = lists[i]->next;
+                    current->next = newList;
+                    newList->next = currentNext;
+                }
+
+            }
+            min = newMin;
+            //if(newMin)
+            //    cout<<newMin->val<<'|';
+        }
+        return headNoInclude.next;
+    }
+};
+
+#endif
+
+#if 0 //runtime 21% O(n * length)
+
+class Solution {
+public:
+
+    struct ListListNode{
+        ListNode* node;
+        ListListNode* next;
+        ListListNode(ListNode* n) : node(n), next(nullptr){}
+    };
 
     ListListNode* insertSortedList(ListListNode* head, ListListNode* newList){
 
@@ -104,10 +211,10 @@ public:
                 current->next = newNode;
                 current = newNode;
             }
+            //cout<<"<-"<<top->node->val;
             top->node = top->node->next;
             top->next = nullptr;
             sortedLists = insertSortedList(others, top);
-            //cout<<"<-"<<sortedLists->node->val;
         }
         return result;
     }
@@ -115,7 +222,7 @@ public:
 
 #endif
 
-#if 0 //7%
+#if 0 //runtime 7% O(n*listLength)
 class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
