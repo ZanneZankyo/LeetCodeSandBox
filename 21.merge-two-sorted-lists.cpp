@@ -38,21 +38,21 @@ public:
         ListNode* cur2 = l2;
         while(cur1 || cur2){
             bool use1 = (cur1 && cur2 && cur1->val < cur2->val) || (cur1 && !cur2);
-            int newValue = 0;
+            ListNode* newNode = nullptr;
             if(use1){
-                newValue = cur1->val;
+                newNode = cur1;
                 cur1 = cur1->next;
             }
             else{
-                newValue = cur2->val;
+                newNode = cur2;
                 cur2 = cur2->next;
             }
             if(!newHead){
-                newHead = new ListNode(newValue);
+                newHead = newNode;
                 cur = newHead;
             }
             else{
-                cur->next = new ListNode(newValue);
+                cur->next = newNode;
                 cur = cur->next;
             }
         }
