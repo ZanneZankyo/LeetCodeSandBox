@@ -32,33 +32,34 @@
  * 
  * 
  */
+
+#if 1 //95.85%
+
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
         vector<vector<string>> result;
         vector<size_t> sortedHash;
         sortedHash.reserve(strs.size());
-        vector<size_t> setHash;
+        map<size_t, int>hashIndex;
         hash<string> hashFunc;
         for(string str : strs){
             sort(str.begin(), str.end());
             sortedHash.push_back(hashFunc(str));
         }
         for(int i = 0 ; i < strs.size(); ++i){
-            bool belongsToAnySet = false;
-            for(int j = 0 ; j < setHash.size(); ++j){
-                if(setHash[j] == sortedHash[i]){
-                    belongsToAnySet = true;
-                    result[j].push_back(strs[i]);
-                }
+            auto found = hashIndex.find(sortedHash[i]);
+            if(found != hashIndex.end()){
+                result[found->second].push_back(strs[i]);
             }
-            if(!belongsToAnySet){
-                setHash.push_back(sortedHash[i]);
-                result.push_back(vector<string>());
-                result[result.size() - 1].push_back(strs[i]);
+            else{
+                hashIndex[sortedHash[i]] = result.size();
+                result.push_back(vector<string>(1,strs[i]));
             }
         }
         return result;
     }
 };
+
+#endif
 
