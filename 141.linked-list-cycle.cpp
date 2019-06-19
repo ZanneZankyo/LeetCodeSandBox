@@ -80,8 +80,8 @@ public:
         ListNode* cur = head;
         ListNode* next = head;
         do{
-            if(next->next && next->next->next){
-                next = next->next->next;
+            if(next->next && next->next->next && next->next->next->next){
+                next = next->next->next->next;
                 cur = cur->next;
                 if(next == cur)
                     return true;
@@ -89,6 +89,7 @@ public:
             else
                 return false;
         }while(cur && next);
+        return false;
     }
 };
 
