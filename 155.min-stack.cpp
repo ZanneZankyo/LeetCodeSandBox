@@ -56,12 +56,15 @@ public:
     
     void push(int x) {
         m_vec.push_back(x);
-        updateMin();
+        if(x < m_min)
+            m_min = x;
     }
     
     void pop() {
+        bool needUpdate = m_vec[m_vec.size()-1] == m_min;
         m_vec.pop_back();
-        updateMin();
+        if(needUpdate)
+            updateMin();
     }
     
     int top() {
