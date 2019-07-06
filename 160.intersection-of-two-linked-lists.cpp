@@ -87,10 +87,71 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
+#if 1 // 99.64%
+
 class Solution {
 public:
     ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        set<ListNode *> setA;
+        if(!headA || !headB){
+            return nullptr;
+        }
+        ListNode* l1 = headA;
+        ListNode* l2 = headB;
+        ListNode* last = nullptr;
+        while(true){
+            if(l1 == l2){
+                return l1;
+            }
+
+            if(!l1->next){
+                if(last && last != l1){
+                    return nullptr;
+                }
+                else{
+                    last = l1;
+                    l1 = headB;
+                }
+            }
+            else{
+                l1 = l1->next;
+            }
+
+            if(!l2->next){
+                if(last && last != l2){
+                    return nullptr;
+                }
+                else{
+                    last = l2;
+                    l2 = headA;
+                }
+            }
+            else{
+                l2 = l2->next;
+            }
+
+        }
+    }
+#endif
+
+#if 0 //5.01%
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* curA = headA;
+        while(curA != nullptr){
+            ListNode* curB = headB;
+            while(curB != nullptr){
+                if(curB == curA){
+                    return curB;
+                }
+                curB = curB->next;
+            }
+            curA = curA->next;
+        }
+        return nullptr;
+    }
+#endif
+#if 0 //34.8%
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        unordered_set<ListNode *> setA;
         ListNode* curA = headA;
         while(curA != nullptr){
             setA.insert(curA);
@@ -105,5 +166,6 @@ public:
         }
         return nullptr;
     }
+#endif
 };
 
