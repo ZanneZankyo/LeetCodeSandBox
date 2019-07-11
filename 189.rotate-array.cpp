@@ -43,10 +43,49 @@
  * Could you do it in-place with O(1) extra space?
  * 
  */
+#if 1 // 89.65% runtime 27.93% space
 class Solution {
 public:
     void rotate(vector<int>& nums, int k) {
-        if(nums.size() == 1 || k == 0)
+        if(nums.size() == 1 || k == 0 || k == nums.size())
+            return;
+        vector<int> result;
+        result.reserve(nums.size());
+        k %= nums.size();
+        int start = (nums.size() - k)%nums.size();
+        result.insert(result.end(), nums.begin() + start, nums.end());
+        result.insert(result.end(), nums.begin(), nums.begin() + start);
+
+        nums = result;
+    }
+};
+#endif
+
+#if 0 //TLE
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        if(nums.size() == 1 || k == 0 || k == nums.size())
+            return;
+        int time = 0;
+        k %= nums.size();
+        while(time != k){
+            int temp = nums[nums.size()-1];
+            for(int i = nums.size()-1; i > 0; --i){
+                nums[i] = nums[i-1];
+            }
+            nums[0] = temp;
+            ++time;
+        }
+    }
+};
+#endif
+
+#if 0 //36.55% runtime 14.99% space
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        if(nums.size() == 1 || k == 0 || k == nums.size())
             return;
         vector<int> result;
         result.reserve(nums.size());
@@ -59,4 +98,5 @@ public:
         nums = result;
     }
 };
+#endif
 
