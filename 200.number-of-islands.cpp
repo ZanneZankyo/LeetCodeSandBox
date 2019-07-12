@@ -47,6 +47,49 @@ public:
         int y;
         Point(int px, int py): x(px), y(py) {}
     };
+    
+    #if 1 // 99.55% runtime 42.83% space
+    int numIslands(vector<vector<char>>& grid) {
+        if(grid.empty())
+            return 0;
+        
+        int sum = 0;
+        queue<Point> q;
+        for(int y = 0; y < grid.size(); y++){
+            for(int x = 0; x < grid[y].size(); x++){
+                if(grid[y][x] == '0')
+                    continue;
+                grid[y][x] = '0';
+                q.push(Point(x,y));
+                while(!q.empty()){
+                    Point p = q.front();
+                    q.pop();
+
+                    if(0<= p.x+1 && p.x+1 < grid[y].size() && grid[p.y][p.x+1] != '0'){
+                        grid[p.y][p.x+1] = '0';
+                        q.push(Point(p.x+1,p.y));
+                    }
+                    if(0<= p.x-1 && p.x-1 < grid[y].size() && grid[p.y][p.x-1] != '0'){
+                        grid[p.y][p.x-1] = '0';
+                        q.push(Point(p.x-1,p.y));
+                    }
+                    if(0<= p.y+1 && p.y+1 < grid.size() && grid[p.y+1][p.x] != '0'){
+                        grid[p.y+1][p.x] = '0';
+                        q.push(Point(p.x,p.y+1));
+                    }
+                    if(0<= p.y-1 && p.y-1 < grid.size() && grid[p.y-1][p.x] != '0'){
+                        grid[p.y-1][p.x] = '0';
+                        q.push(Point(p.x,p.y-1));
+                    }
+                }
+                sum++;
+            }
+        }
+        return sum;
+    }
+    #endif
+
+    #if 0 // 73.66% runtime 13.13% space
     int numIslands(vector<vector<char>>& grid) {
         if(grid.empty())
             return 0;
@@ -82,5 +125,6 @@ public:
         }
         return sum;
     }
+    #endif
 };
 
