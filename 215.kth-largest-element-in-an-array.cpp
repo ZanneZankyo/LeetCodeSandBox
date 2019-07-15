@@ -31,6 +31,7 @@
  * You may assume k is always valid, 1 ≤ k ≤ array's length.
  * 
  */
+#if 0 // 17.67% runtime O(nk)
 class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
@@ -51,4 +52,32 @@ public:
         return nums[k-1];
     }
 };
+#endif
 
+#if 0 //83.93% runtime O(nklogk)
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+
+        priority_queue<int, vector<int>, greater<int>> pq;
+        for(int const &num : nums){
+            pq.push(num);
+            if(pq.size()>k){
+                pq.pop();
+            }
+        }
+        return pq.top();
+    }
+};
+#endif
+
+#if 1 //98.02% runtime
+class Solution {
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+
+        nth_element(nums.begin(), nums.begin() + k - 1, nums.end(), greater<int>());
+        return nums[k - 1];
+    }
+};
+#endif
