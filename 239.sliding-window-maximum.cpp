@@ -40,6 +40,46 @@
  * Follow up:
  * Could you solve it in linear time?
  */
+#if 1 //96.29% runtime
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> result;
+        if(!nums.size() || !k){
+            return result;
+        }
+        if(k == 1){
+            return nums;
+        }
+        result.reserve(nums.size() - k + 1);
+        int max = nums[0];
+        for(int i = 0; i < k; ++i){
+            if(max < nums[i]){
+                max = nums[i];
+            }
+        }
+        result.push_back(max);
+
+        for(int i = k; i < nums.size(); ++i){
+            if(nums[i] > max){
+                max = nums[i];
+            }
+            else if(nums[i-k] == max){
+                max = nums[i-k+1];
+                for(int j = i-k+1; j <= i; ++j){
+                    if(nums[j] > max){
+                        max = nums[j];
+                    }
+                }
+            }
+            result.push_back(max);
+        }
+
+        return result;
+    }
+};
+#endif
+#if 0 // 11.35% runtime
 class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
@@ -62,4 +102,5 @@ public:
         return result;
     }
 };
+#endif
 
