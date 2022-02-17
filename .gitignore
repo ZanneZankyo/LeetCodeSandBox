@@ -1,2 +1,6 @@
 testCase.txt
 /.vscode/
+*.exe
+*.ilk
+*.obj
+*.pdb
