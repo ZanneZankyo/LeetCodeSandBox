@@ -43,14 +43,16 @@
  */
 class Solution {
 public:
-    bool isAdditionOverflow_Int(int source, int additive)
+    bool isAdditionOverflow_Int(unsigned int source, unsigned int additive, bool positive)
     {
-        static const int overFlow = pow(2,31) - 1;
-        return overFlow - source < additive;
+        static const unsigned int overFlow = pow(2,31) - 1;
+        return positive ? overFlow - source < additive : overFlow + 1 - source < additive;
     }
     int reverse(int x) {
+        if(x == -0x80000000)
+            return 0;
         vector<int>digits;
-        digits.reserve(32);
+        digits.reserve(11);
         bool positive = x > 0;
         x = positive ? x : x * -1;
         while(x > 0)
@@ -59,12 +61,14 @@ public:
             digits.push_back(digit);
             x /= 10;
         }
-        int result = 0;
+        unsigned int result = 0;
         for(int i = 0; i<digits.size();i++)
         {
-            int j = digits.size() - i - 1;
-            int additive = digits[i] * pow(10,j);
-            if(isAdditionOverflow_Int(result,additive))
+            int j = digits.size() - 1 - i;
+            if(j >= 9 && digits[i] > 2)
+                return 0;
+            unsigned int additive = digits[i] * pow(10,j);
+            if(isAdditionOverflow_Int(result,additive,positive))
                 return 0;
             result += additive;
         }
