@@ -44,7 +44,7 @@ class Solution {
 public:
     vector<vector<int>> permute(vector<int>& nums) {
         result.clear();
-        result.reserve(factorial(nums.size()));
+        result.reserve(factorial(nums.size())); // number of results are !nums.size()
         permutation.clear();
         permutation.reserve(nums.size());
         usedNums.clear();
