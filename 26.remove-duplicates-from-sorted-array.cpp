@@ -59,10 +59,30 @@
  * }
  * 
  */
+#if 1 // 22.64% time 93.29% mem
 class Solution {
 public:
     int removeDuplicates(vector<int>& nums) {
-        for(int i = 0; i < nums.size(); i++){
+        if(nums.empty()) return 0;
+        int maxNum = nums[0];
+        int nextIndex = 1;
+        for(int i = 0; i < nums.size(); ++i){
+            if(nums[i] > maxNum)
+            {
+                nums[nextIndex] = nums[i];
+                maxNum = nums[i];
+                ++nextIndex;
+            }
+        }
+        return nextIndex;
+    }
+};
+#endif
+#if 0 // 5.01% time 93.29% mem
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        for(int i = 0; i < nums.size(); ++i){
             int j = i+1;
             while(j < nums.size() && nums[i] == nums[j])
                 nums.erase(nums.begin()+j);
@@ -70,4 +90,25 @@ public:
         return nums.size();
     }
 };
-
+#endif
+#if 0 // 5.01% time 5.95% mem
+// since it is a sorted array, don't use this. this is for a unsorted array
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        unordered_set<int> appearedNums;
+        for(int i = 0; i < nums.size(); ++i){
+            if(appearedNums.find(nums[i]) != appearedNums.end())
+            {
+                nums.erase(nums.begin() + i);
+                --i;
+            }
+            else
+            {
+                appearedNums.emplace(nums[i]);
+            }
+        }
+        return nums.size();
+    }
+};
+#endif
