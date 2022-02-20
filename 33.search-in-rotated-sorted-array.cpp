@@ -37,6 +37,71 @@
  * Output: -1
  * 
  */
+#if 1
+class Solution {
+private:
+    int BinarySearchRotationPoint(vector<int> const &nums){
+        int start = 0, end = nums.size() - 1;
+        if(nums[start] < nums[end]){
+            return 0;
+        }
+        while(start + 1 < end){
+            int middle = (start + end) * 0.5;
+            if(nums[middle] > nums[end]){
+                start = middle;
+            }
+            else if(nums[middle] < nums[end]){
+                end = middle;
+            }
+        }
+        return end;
+    }
+public:
+    int search(vector<int>& nums, int target) {
+        if(nums.empty()){
+            return -1;
+        }
+        if(nums.size() == 1){
+            return nums[0] == target ? 0 : -1;
+        }
+        int rotationPoint = BinarySearchRotationPoint(nums);
+        int start, end;
+        if(rotationPoint == 0){
+            start = 0;
+            end = nums.size() - 1;
+        }
+        else if(target >= nums[0]){
+            start = 0;
+            end = rotationPoint - 1;
+        }
+        else{
+            start = rotationPoint;
+            end = nums.size() - 1;
+        }
+        do{
+            int middle = (start + end) * 0.5;
+            if(nums[middle] > target){
+                end = middle;
+            }
+            else if(nums[middle] < target){
+                start = middle;
+            }
+            else{
+                return middle;
+            }
+            if(nums[start] == target){
+                return start;
+            }
+            if(nums[end] == target){
+                return end;
+            }
+        }
+        while(start + 1 < end);
+        return -1;
+    }
+};
+#endif
+#if 0
 class Solution {
 public:
     int search(vector<int>& nums, int target) {
@@ -48,4 +113,5 @@ public:
         return -1;
     }
 };
+#endif
 
