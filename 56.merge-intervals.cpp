@@ -29,41 +29,71 @@
  * Output: [[1,5]]
  * Explanation: Intervals [1,4] and [4,5] are considered overlapping.
  * 
+ * 
+ * Constraints:
+ * 
+ * 1 <= intervals.length <= 104
+ * intervals[i].length == 2
+ * 0 <= starti <= endi <= 104
+ * 
  */
-/**
- * Definition for an interval.
- * struct Interval {
- *     int start;
- *     int end;
- *     Interval() : start(0), end(0) {}
- *     Interval(int s, int e) : start(s), end(e) {}
- * };
- */
-/**
- * Definition for an interval.
- * struct Interval {
- *     int start;
- *     int end;
- *     Interval() : start(0), end(0) {}
- *     Interval(int s, int e) : start(s), end(e) {}
- * };
- */
+#if 1
 class Solution {
 public:
-    vector<Interval> merge(vector<Interval>& intervals) {
+    static bool sortIntervals(vector<int> const &intervalA, vector<int> const &intervalB){
+        return intervalA[0] < intervalB[0];
+    }
+
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        std::sort(intervals.begin(), intervals.end(), sortIntervals);
+
+        vector<vector<int>> result;
+        result.reserve(intervals.size());
+
+        int intervalStart = intervals[0][0], intervalEnd = intervals[0][1];
+        for(int i = 1; i < intervals.size(); ++i){
+            if(intervalEnd < intervals[i][0]){
+                vector<int> newInterval;
+                newInterval.resize(2);
+                newInterval[0] = intervalStart;
+                newInterval[1] = intervalEnd;
+                result.push_back(newInterval);
+                intervalStart = intervals[i][0];
+                intervalEnd = intervals[i][1];
+            }
+            else{
+                intervalEnd = intervalEnd > intervals[i][1] ? intervalEnd : intervals[i][1];
+            }
+        }
+        vector<int> newInterval;
+        newInterval.resize(2);
+        newInterval[0] = intervalStart;
+        newInterval[1] = intervalEnd;
+        result.push_back(newInterval);
+        return result;
+    }
+};
+#endif
+#if 0
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
         for(int i = 0 ; i < intervals.size(); i++){
             bool didMerge = false;
             for(int j = i + 1; j < intervals.size(); j++){
-                if( (intervals[i].end >= intervals[j].start && intervals[i].start < intervals[j].end)
-                   || (intervals[j].end >= intervals[i].start && intervals[j].start < intervals[i].end)
-                   || (intervals[i].start <= intervals[j].start && intervals[j].end <= intervals[i].end)
-                   || (intervals[j].start <= intervals[i].start && intervals[i].end <= intervals[j].end)
+                if( (intervals[i][1] >= intervals[j][0] && intervals[i][0] < intervals[j][1])
+                   || (intervals[j][1] >= intervals[i][0] && intervals[j][0] < intervals[i][1])
+                   || (intervals[i][0] <= intervals[j][0] && intervals[j][1] <= intervals[i][1])
+                   || (intervals[j][0] <= intervals[i][0] && intervals[i][1] <= intervals[j][1])
                   ){
-                    int min = intervals[i].start < intervals[j].start ? intervals[i].start : intervals[j].start;
-                    int max = intervals[i].end > intervals[j].end ? intervals[i].end : intervals[j].end;
+                    int min = intervals[i][0] < intervals[j][0] ? intervals[i][0] : intervals[j][0];
+                    int max = intervals[i][1] > intervals[j][1] ? intervals[i][1] : intervals[j][1];
                     intervals.erase(intervals.begin() + j);
                     intervals.erase(intervals.begin() + i);
-                    intervals.insert(intervals.begin() + i, Interval(min,max));
+                    vector<int> newInterval;
+                    newInterval.push_back(min);
+                    newInterval.push_back(max);
+                    intervals.insert(intervals.begin() + i, newInterval);
                     j-=2;
                     if(j <= i)
                         j = i+1;
@@ -79,4 +109,5 @@ public:
         return intervals;
     }
 };
+#endif
 
