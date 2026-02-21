@@ -43,82 +43,131 @@
  * 
  * 
  */
+
+ /**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache* obj = new LRUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+
+#include <unordered_map>
+using namespace std;
+struct Node {
+    int key, val;
+    Node* prev = nullptr;
+    Node* next = nullptr;
+    Node(int k, int v) : key(k), val(v){} 
+};
 class LRUCache {
 public:
-    struct Pair{
-        int key = 0;
-        int val = 0;
-        unsigned int id = 0;
-        Pair(int k, int v, unsigned int i): key(k), val(v), id(i) {}
-    };
-    
-    vector<Pair> pairs;
-    int capacity = 0;
-    int recentId = 0;
-    
+    unordered_map<int, Node*> map;
+    int capacity;
+    Node* head;
+    Node* tail;
+    int len;
+
     LRUCache(int cap) {
         capacity = cap;
-        pairs.reserve(cap);
+        head = nullptr;
+        tail = nullptr;
+        len = 0;
     }
-    
+
+    ~LRUCache() {
+        for (auto pair : map) {
+            if (pair.second != nullptr) {
+                delete pair.second;
+            }
+        }
+    }
+
+    void updateNode(Node* node) {
+        removeNode(node);
+        addToHead(node);
+    }
+
+    void addToHead(Node* node) {
+        node->next = head;
+        if (head != nullptr) {
+            head->prev = node;
+        }
+        head = node;
+        if (tail == nullptr) {
+            tail = node;
+        }
+    }
+
+    void removeNode(Node* node) {
+        if (node == tail) {
+            tail = node->prev;
+        }
+        if (node == head) {
+            head = node->next;
+        }
+        if (node->prev != nullptr) {
+            node->prev->next = node->next;
+        }
+        if (node->next != nullptr) {
+            node->next->prev = node->prev;
+        }
+        node->prev = nullptr;
+        node->next = nullptr;
+    }
+
     int get(int key) {
-        for(int i = 0; i < pairs.size(); i++){
-            if(pairs[i].key == key){
-                pairs[i].id = recentId++;
-                return pairs[i].val;
+        auto found = map.find(key);
+        if (found != map.end()) {
+            //cout<<"get "<<found->second->key<<endl;
+            if (found->second != head) {
+                updateNode(found->second);
             }
-                
+            print();
+            return found->second->val;
         }
-        return -1;
+        else {
+            return -1;
+        }
     }
-    
+
     void put(int key, int value) {
-        if(pairs.size() >= capacity){
-            int minId = pairs[0].id;
-            int minIndex = 0;
-            bool sameKey = false;
-            int sameKeyIndex = -1;
-            for(int i = 0 ; i < pairs.size(); i++){
-                if(pairs[i].id < minId){
-                    minId = pairs[i].id;
-                    minIndex = i;
-                }
-                if(pairs[i].key == key){
-                    sameKey = true;
-                    sameKeyIndex = i;
-                    break;
-                }
+        auto found = map.find(key);
+        if (found != map.end()) {
+            found->second->val = value;
+            if (found->second != head) {
+                updateNode(found->second);
             }
-            if(sameKey){
-                pairs[sameKeyIndex].id = recentId++;
-                pairs[sameKeyIndex].key = key;
-                pairs[sameKeyIndex].val = value;
-            }
-            else{
-                pairs[minIndex].id = recentId++;
-                pairs[minIndex].key = key;
-                pairs[minIndex].val = value;
-            }
-            
+            //cout<<"updating "<<found->first<<endl;
         }
-        else{
-            bool sameKey = false;
-            int sameKeyIndex = -1;
-            for(int i = 0 ; i < pairs.size(); i++){
-                if(pairs[i].key == key){
-                    sameKey = true;
-                    sameKeyIndex = i;
-                    break;
-                }
+        else {
+            Node* node = new Node(key, value);
+            map.insert({key, node});
+            addToHead(node);
+            //cout<<"adding "<<key<<endl;
+            print();
+            ++len;
+            if (len > capacity) {
+                Node *oldTail = tail;
+                //cout<<"erasing "<<oldTail->key<<endl;
+                removeNode(oldTail);
+                print();
+                map.erase(oldTail->key);
+                delete oldTail;
+                --len;
             }
-            if(sameKey){
-                pairs[sameKeyIndex].id = recentId++;
-                pairs[sameKeyIndex].key = key;
-                pairs[sameKeyIndex].val = value;
-            }
-            else
-                pairs.push_back(Pair(key,value, recentId++));
         }
+    }
+
+    void print() {
+        #if 0
+        Node* node = head;
+        cout<<"print:";
+        while(node != nullptr) {
+            cout<<node->key<<' ';
+            node = node->next;
+        }
+        cout<<endl;
+        #endif
     }
 };
 
