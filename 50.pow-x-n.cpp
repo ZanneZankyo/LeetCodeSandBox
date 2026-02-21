@@ -55,7 +55,7 @@ public:
 			return 1;
 
 		bool positive = n > 0;
-		unsigned int pow = positive ? n : -n;
+		unsigned int pow = positive ? n : static_cast<unsigned int>(-static_cast<long>(n));
 		x = positive ? x : 1 / x;
 		double result = x;
 		unsigned int i = 1;
