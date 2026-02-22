@@ -71,16 +71,6 @@ struct Rect{
     bool isValid() const {return Min.X <= Max.X && Min.Y <= Max.Y;}
     static bool getIntersection(const Rect& a, const Rect& b, Rect& out_Intersection) {
         out_Intersection = Rect(max(a.Min.X, b.Min.X), max(a.Min.Y, b.Min.Y), min(a.Max.X, b.Max.X), min(a.Max.Y, b.Max.Y));
-        //Point Min(max(a.Min.X, b.Min.X), max(a.Min.Y, b.Min.Y));
-        //Point Max(min(a.Max.X, b.Max.X), min(a.Max.X, b.Max.Y));
-        /*if (a.isPointInside(b.getBottomLeft()) || a.isPointInside(b.getBottomRight())
-            || a.isPointInside(b.getTopLeft()) || a.isPointInside(b.getTopRight())) {
-            out_Intersection = r;
-            return true;
-        }
-        else {
-            return false;
-        }*/
         return out_Intersection.isValid();
     }
 };
