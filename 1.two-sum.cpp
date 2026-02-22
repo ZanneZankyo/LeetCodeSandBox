@@ -29,8 +29,29 @@
  * 
  * 
  */
+#include <unordered_map>
 class Solution {
-
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> result;
+        result.reserve(2);
+        unordered_map<int, int> visitedNums;
+        for (int i = 0; i < nums.size(); ++i) {
+            int num = nums[i];
+            int opposite = target - num;
+            auto found = visitedNums.find(opposite);
+            if (found != visitedNums.end()) {
+                result.emplace_back(i);
+                result.emplace_back(found->second);
+                return result;
+            }
+            else {
+                visitedNums.insert({num, i});
+            }
+        }
+        return result;
+    }
+#if 0
     struct mySet{
         int index;
         int value;
@@ -105,6 +126,7 @@ public:
                 }
         return result;
     }
+#endif
 #endif
 };
 
