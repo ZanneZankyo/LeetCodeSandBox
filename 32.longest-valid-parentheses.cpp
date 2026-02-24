@@ -56,7 +56,7 @@
 #include <vector>
 #define MEMORY 0
 #define SPEED 1
-#define METHOD MEMORY
+#define METHOD SPEED
 using namespace std;
 class Solution {
 public:
@@ -95,46 +95,27 @@ public:
 private:
     vector<bool> bits;
 #else
-public:
+public: // dp
     int longestValidParentheses(string s) {
+        dp.resize(s.size(), 0);
         int maxLen = 0;
-        int prevLen = 0;
-        int len = 0;
-        int clen = 0;
-        for (int i = 0; i < s.size(); ++i) { 
-            if (s[i] == '(') {
-                ++len;
-                ++clen;
-            }
-            else {
-                --clen;
-                if (clen >= 0 && len > 0) {
-                    ++len;
-                }
-            }
-            if (clen <= 0) {
-                if (len > 0) {
-                    len += prevLen;
-                    maxLen = max(maxLen, len);
-                    prevLen = len;
-                    len = 0;
+        for (int i = 1; i < s.size(); ++i) {
+            if (s[i] == ')') {
+                if (s[i-1] == '(') {
+                    dp[i] = (i > 1 ? dp[i - 2] : 0) + 2;
                 }
                 else {
-                    prevLen = 0;
+                    if (i - dp[i-1] - 1 >= 0 && s[i - dp[i-1] - 1] == '(') {
+                        dp[i] = dp[i-1] + 2 + (i-dp[i-1]-2 >= 0?dp[i-dp[i-1]-2] : 0);
+                    }
                 }
-                clen = 0;
+                maxLen = max(maxLen, dp[i]);
             }
-        }
-        if (len > 0) {
-            //len += prevLen - clen;
-            len -= clen;
-            maxLen = max(maxLen, len);
-            prevLen = len;
-            len = 0;
-            clen = 0;
         }
         return maxLen;
     }
+private:
+    vector <int> dp; // longestValidParentheses at i;
 #endif
 };
 #if 0
