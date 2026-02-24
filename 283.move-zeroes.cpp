@@ -30,16 +30,17 @@
 class Solution {
 public:
     void moveZeroes(vector<int>& nums) {
-        int zero = 0;
-        for(int i = 0; i < nums.size(); i++){
-            if(nums[i] == 0){
-                nums.erase(nums.begin() + i);
-                zero++;
-                i--;
+        int next = 0;
+        for (int i = 0; i < nums.size(); ++i) {
+            if (nums[i] != 0) {
+                if (i != next) {
+                    nums[next++] = nums[i];
+                    nums[i] = 0;
+                }
+                else {
+                    next = i + 1;
+                }
             }
-        }
-        for(int i = 0; i < zero; i++){
-            nums.push_back(0);
         }
     }
 };
