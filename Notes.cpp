@@ -48,3 +48,46 @@ struct Rect{
         return out_Intersection.isValid();
     }
 };
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode() : val(0), next(nullptr) {}
+    ListNode(int x) : val(x), next(nullptr) {}
+    ListNode(int x, ListNode *next) : val(x), next(next) {}
+};
+ListNode *vectorToListNode(vector<int>& v) {
+    ListNode *head = nullptr;
+    ListNode *node = nullptr;
+    for (int i = 0; i < v.size(); ++i) {
+        ListNode *newNode = new ListNode(v[i]);
+        if (node != nullptr) {
+            node->next = newNode;
+        }
+        node = newNode;
+        if (head == nullptr) {
+            head = node;
+        }
+    }
+    return head;
+}
+void releaseNodes(ListNode *node) {
+    if (node == nullptr) {
+        return;
+    }
+    releaseNodes(node->next);
+    delete node;
+}
+void printNodes(ListNode *node, int n = 0) {
+    if (node == nullptr) {
+        return;
+    }
+    if (n > 0) {
+        cout << ',';
+    }
+    cout << node->val;
+    printNodes(node->next, n+1);
+    if (n == 0) {
+        cout << endl;
+    }
+}
