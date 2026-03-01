@@ -37,6 +37,14 @@
 class Solution {
 public:
     int singleNumber(vector<int>& nums) {
+        int ans = 0;
+        for (int n : nums) {
+            ans ^= n;
+        }
+        return ans;
+    }
+#if 0 // uses extra mem
+    int singleNumber(vector<int>& nums) {
         map<int,int> m;
         for(int i = 0; i <nums.size(); i++){
             auto found = m.find(nums[i]);
@@ -53,5 +61,6 @@ public:
         }
         return 0;
     }
+#endif
 };
 
